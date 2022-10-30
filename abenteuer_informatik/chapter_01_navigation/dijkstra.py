@@ -26,7 +26,10 @@ class Network:
             if end_node_id in traversed_nodes:
                 return traversed_nodes[end_node_id]
 
-            path_to_next_node = min(self.get_possible_paths(traversed_nodes), key=lambda path: path.length)
+            try:
+                path_to_next_node = min(self.get_possible_paths(traversed_nodes), key=lambda path: path.length)
+            except ValueError as exc:
+                raise ValueError("No path found.") from exc
             traversed_nodes[path_to_next_node.node_ids[-1]] = path_to_next_node
 
     def get_possible_paths(self, traversed_node_ids: Dict[str, Path]):

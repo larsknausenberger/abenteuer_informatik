@@ -174,3 +174,15 @@ def test_best_path(network: Network, start_node_id: str, end_node_id: str, expec
     best_path = network.get_best_path(start_node_id=start_node_id, end_node_id=end_node_id)
     assert best_path.node_ids == expected.node_ids
     assert best_path.length == pytest.approx(expected.length)
+
+
+def test_no_possible_path():
+    network = Network(
+        nodes={
+            "A": Node(direct_paths=(DirectPath(end_node_id="A", length=6.7),)),
+            "B": Node(direct_paths=()),
+        }
+    )
+    with pytest.raises(ValueError) as excinfo:
+        network.get_best_path(start_node_id="B", end_node_id="A")
+    assert "no path" in str(excinfo.value).lower()
