@@ -1,0 +1,16 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "abenteuer_informatik"
+version = "0.0.1"
+authors = [
+  { name="Lars Knausenberger", email="lars.knausenberger@gmail.com" },
+]
+description = "A small example package"
+
+[tool.pytest.ini_options]
+addopts = [
+    "--import-mode=importlib",
+]
