@@ -171,12 +171,16 @@ def network():
     ],
 )
 def test_best_path(network: Network, start_node_id: str, end_node_id: str, expected: Path):
+    """tests if best path algorithm returns correct results"""
+
     best_path = network.get_best_path(start_node_id=start_node_id, end_node_id=end_node_id)
     assert best_path.node_ids == expected.node_ids
     assert best_path.length == pytest.approx(expected.length)
 
 
 def test_no_possible_path():
+    """test if the correct exception if raised if no possible path exists between start and end"""
+
     network = Network(
         nodes={
             "A": Node(direct_paths=(DirectPath(end_node_id="B", length=6.7),)),
@@ -189,18 +193,24 @@ def test_no_possible_path():
 
 
 def test_invalid_start_node_id(network):
+    """tests if correct exception is raised if start node id does not exist"""
+
     with pytest.raises(KeyError) as excinfo:
         network.get_best_path(start_node_id="R", end_node_id="E")
     assert 'start node "r" does not exist' in str(excinfo.value).lower()
 
 
 def test_invalid_end_node_id(network):
+    """tests if correct exception is raised if end node id does not exist"""
+
     with pytest.raises(KeyError) as excinfo:
         network.get_best_path(start_node_id="E", end_node_id="R")
     assert 'end node "r" does not exist' in str(excinfo.value).lower()
 
 
 def test_invalid_network():
+    """tests if correct exception is raised if a direct path leads to a non-existing node id"""
+
     with pytest.raises(KeyError) as excinfo:
         Network(
             nodes={
