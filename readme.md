@@ -1,0 +1,1 @@
+This repository contains possible implementations of the algorithms described in the excellent German book ["Abenteuer Informatik"](http://www.abenteuer-informatik.de/) by Jens Gallenbacher.
