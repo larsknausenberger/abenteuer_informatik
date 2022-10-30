@@ -179,10 +179,32 @@ def test_best_path(network: Network, start_node_id: str, end_node_id: str, expec
 def test_no_possible_path():
     network = Network(
         nodes={
-            "A": Node(direct_paths=(DirectPath(end_node_id="A", length=6.7),)),
+            "A": Node(direct_paths=(DirectPath(end_node_id="B", length=6.7),)),
             "B": Node(direct_paths=()),
         }
     )
     with pytest.raises(ValueError) as excinfo:
         network.get_best_path(start_node_id="B", end_node_id="A")
     assert "no path" in str(excinfo.value).lower()
+
+
+def test_invalid_start_node_id(network):
+    with pytest.raises(KeyError) as excinfo:
+        network.get_best_path(start_node_id="R", end_node_id="E")
+    assert 'start node "r" does not exist' in str(excinfo.value).lower()
+
+
+def test_invalid_end_node_id(network):
+    with pytest.raises(KeyError) as excinfo:
+        network.get_best_path(start_node_id="E", end_node_id="R")
+    assert 'end node "r" does not exist' in str(excinfo.value).lower()
+
+
+def test_invalid_network():
+    with pytest.raises(KeyError) as excinfo:
+        Network(
+            nodes={
+                "A": Node(direct_paths=(DirectPath(end_node_id="X", length=6.7),)),
+            }
+        )
+    assert "network invalid" in str(excinfo.value).lower()

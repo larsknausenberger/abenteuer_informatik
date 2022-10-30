@@ -17,9 +17,30 @@ class Path(NamedTuple):
 
 class Network:
     def __init__(self, nodes: Dict[str, Node]):
+        # validate nodes
+        for node_id, node in nodes.items():
+            for direct_path in node.direct_paths:
+                if direct_path.end_node_id not in nodes:
+                    raise KeyError(
+                        f'Network invalid: Node with ID "{node_id}" has a direct path to a non-existing node with ID "{direct_path.end_node_id}".'
+                    )
+
         self.nodes = nodes
 
     def get_best_path(self, start_node_id: str, end_node_id: str) -> Path:
+        # validate start node exists
+        try:
+            self.nodes[start_node_id]
+        except KeyError as exc:
+            raise KeyError(f'Start node "{start_node_id}" does not exist.') from exc
+
+        # validate end node exists
+        try:
+            self.nodes[end_node_id]
+        except KeyError as exc:
+            raise KeyError(f'End node "{end_node_id}" does not exist.') from exc
+
+        # initialize traversed nodes with start node
         traversed_nodes = {start_node_id: Path(node_ids=(start_node_id,), length=0.0)}
 
         while True:
